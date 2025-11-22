@@ -52,7 +52,7 @@ def load_custom_css():
     
     /* Main Container */
     .main .block-container {
-        padding-top: 2rem;
+        padding-top: 1rem;
         padding-bottom: 2rem;
         max-width: 1400px;
     }
@@ -60,7 +60,7 @@ def load_custom_css():
     /* Headers */
     h1, h2, h3 {
         font-weight: 700;
-        color: #2c3e50;
+        color: #1e3a8a;
     }
     
     h1 {
@@ -73,20 +73,20 @@ def load_custom_css():
         margin-top: 2rem;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: 3px solid #3498db;
+        border-bottom: 3px solid #3b82f6;
     }
     
     h3 {
         font-size: 1.5rem;
         margin-top: 1.5rem;
-        color: #34495e;
+        color: #1e40af;
     }
     
     /* Metrics */
     [data-testid="stMetricValue"] {
         font-size: 2rem;
         font-weight: 700;
-        color: #2c3e50;
+        color: #0a1a46;
     }
     
     [data-testid="stMetricDelta"] {
@@ -95,7 +95,7 @@ def load_custom_css():
     
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
         padding-top: 2rem;
     }
     
@@ -143,20 +143,15 @@ def load_custom_css():
     /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2rem;
-        background-color: #f8f9fa;
+        background-color: transparent;
         padding: 0.5rem;
-        border-radius: 10px;
     }
     
     .stTabs [data-baseweb="tab"] {
         height: 3rem;
         font-weight: 600;
         border-radius: 8px;
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background-color: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background-color: transparent;
     }
     
     /* Dataframe */
@@ -236,16 +231,27 @@ def render_sidebar(df: pd.DataFrame):
     """
     with st.sidebar:
         st.markdown("""
-        <div style='text-align: center; padding: 1rem 0 2rem 0;'>
-            <h1 style='color: white; margin: 0; font-size: 1.8rem;'>🚗 Mobilité France</h1>
+        <div style='text-align: center; padding: 1rem 0 1rem 0;'>
+            <h1 style='color: white; margin: 0; font-size: 1.8rem;'>Mobilité France</h1>
             <p style='color: rgba(255,255,255,0.9); margin-top: 0.5rem;'>Filtres & Navigation</p>
         </div>
         """, unsafe_allow_html=True)
         
+        # Show current selection stats at top from session state
+        if 'total_actifs' in st.session_state and 'nb_communes' in st.session_state:
+            total_actifs = st.session_state['total_actifs']
+            nb_communes = st.session_state['nb_communes']
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                st.metric("Actifs", f"{total_actifs/1_000_000:.1f}M")
+            with col2:
+                st.metric("Communes", f"{nb_communes:,}".replace(',', ' '))
+        
         st.markdown("---")
         
         # Region filter
-        st.markdown("### 🗺️ Filtres Géographiques")
+        st.markdown("### Filtres Géographiques")
         
         all_regions = sorted(df['nom_region'].dropna().unique())
         selected_regions = st.multiselect(
@@ -273,7 +279,7 @@ def render_sidebar(df: pd.DataFrame):
         st.markdown("---")
         
         # Size filters
-        st.markdown("### 👥 Taille des Communes")
+        st.markdown("### Taille des Communes")
         
         size_categories = st.multiselect(
             "Catégories de taille",
@@ -283,11 +289,38 @@ def render_sidebar(df: pd.DataFrame):
             help="Filtrer par taille de commune"
         )
         
+        # Dynamic slider bounds based on size categories
+        slider_min = 0
+        slider_max = 10000
+        default_value = 1000
+        
+        if size_categories:
+            if 'Très petite (<100)' in size_categories:
+                slider_min = 0
+                slider_max = 100
+                default_value = min(default_value, 50)
+            elif 'Petite (100-500)' in size_categories:
+                slider_min = 100
+                slider_max = 500
+                default_value = min(default_value, 300)
+            elif 'Moyenne (500-2k)' in size_categories:
+                slider_min = 500
+                slider_max = 2000
+                default_value = min(default_value, 1000)
+            elif 'Grande (2k-10k)' in size_categories:
+                slider_min = 2000
+                slider_max = 10000
+                default_value = max(default_value, 2000)
+            elif 'Très grande (>10k)' in size_categories:
+                slider_min = 10000
+                slider_max = 100000
+                default_value = max(default_value, 10000)
+        
         min_actifs = st.slider(
             "Minimum d'actifs",
-            min_value=0,
-            max_value=10000,
-            value=0,
+            min_value=slider_min,
+            max_value=slider_max,
+            value=default_value,
             step=100,
             help="Exclure les très petites communes"
         )
@@ -295,16 +328,12 @@ def render_sidebar(df: pd.DataFrame):
         st.markdown("---")
         
         # Info section
-        st.markdown("### ℹ️ À Propos")
+        st.markdown("### À Propos")
         st.markdown("""
         <p style='color: rgba(255,255,255,0.9); font-size: 0.9rem;'>
         Ce dashboard analyse les trajets domicile-travail de 25M+ d'actifs français.
         </p>
         """, unsafe_allow_html=True)
-        
-        # Stats about current selection
-        st.markdown("---")
-        st.markdown("### 📊 Sélection Actuelle")
         
         filters = {
             'regions': selected_regions if selected_regions else None,
@@ -333,6 +362,11 @@ def main():
         st.error(f"❌ Erreur lors du chargement des données : {e}")
         st.stop()
     
+    # Initialize stats in session state with full dataset if not present
+    if 'total_actifs' not in st.session_state:
+        st.session_state['total_actifs'] = complete_df['valeur'].sum()
+        st.session_state['nb_communes'] = complete_df['geocode_commune'].nunique()
+    
     # Sidebar filters
     filters = render_sidebar(complete_df)
     
@@ -345,21 +379,17 @@ def main():
         min_actifs=filters['min_actifs']
     )
     
-    # Show filter stats in sidebar
-    with st.sidebar:
-        total_actifs = filtered_df['valeur'].sum()
-        nb_communes = filtered_df['geocode_commune'].nunique()
-        
-        st.metric("Actifs", f"{total_actifs/1_000_000:.1f}M")
-        st.metric("Communes", f"{nb_communes:,}".replace(',', ' '))
+    # Update stats in session state
+    st.session_state['total_actifs'] = filtered_df['valeur'].sum()
+    st.session_state['nb_communes'] = filtered_df['geocode_commune'].nunique()
     
     # Main content tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "🏠 Introduction",
-        "📊 Vue d'Ensemble",
-        "🗺️ Cartographie",
-        "🔬 Analyses Comparatives",
-        "🎓 Conclusions"
+        "Introduction",
+        "Vue d'Ensemble",
+        "Cartographie",
+        "Analyses Comparatives",
+        "Conclusions"
     ])
     
     with tab1:

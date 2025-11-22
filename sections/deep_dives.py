@@ -16,7 +16,7 @@ def render(df: pd.DataFrame):
         df: Filtered complete dataset
     """
     
-    st.markdown("## 🗺️ La Carte des Dépendances : Analyse Spatiale")
+    st.markdown("## La Carte des Dépendances : Analyse Spatiale")
     
     st.markdown("""
     Cette section révèle la **géographie de la mobilité** en France. 
@@ -24,10 +24,9 @@ def render(df: pd.DataFrame):
     """)
     
     # Choose analysis type
-    analysis_type = st.radio(
+    analysis_type = st.selectbox(
         "Choisissez l'analyse :",
-        options=["🚗 Dépendance Automobile", "🌱 Score de Mobilité Durable"],
-        horizontal=True
+        options=["Dépendance Automobile", "Score de Mobilité Durable"]
     )
     
     st.markdown("---")
@@ -40,7 +39,7 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Regional comparison
-    st.markdown("## 🏛️ Comparaison Régionale")
+    st.markdown("## Comparaison Régionale")
     
     render_regional_comparison(df)
 
@@ -48,7 +47,7 @@ def render(df: pd.DataFrame):
 def render_car_dependency_map(df: pd.DataFrame):
     """Render the car dependency map."""
     
-    st.markdown("### 🚗 Carte de la Dépendance Automobile")
+    st.markdown("### Carte de la Dépendance Automobile")
     
     st.markdown("""
     **Rouge foncé** = Forte dépendance (> 80% de voiture)  
@@ -96,7 +95,7 @@ def render_car_dependency_map(df: pd.DataFrame):
         )
     
     # Top communes with highest car dependency
-    st.markdown("#### 🔴 Top 15 : Les Communes Les Plus Dépendantes")
+    st.markdown("#### Top 15 : Les Communes Les Plus Dépendantes")
     
     top_dependent = dependency_df.nlargest(15, 'indice_dependance_voiture')[
         ['nom_commune', 'nom_departement', 'indice_dependance_voiture', 'total_actifs']
@@ -128,7 +127,7 @@ def render_car_dependency_map(df: pd.DataFrame):
 def render_sustainable_mobility_map(df: pd.DataFrame):
     """Render the sustainable mobility score map."""
     
-    st.markdown("### 🌱 Carte du Score de Mobilité Durable")
+    st.markdown("### Carte du Score de Mobilité Durable")
     
     st.markdown("""
     Ce score agrège les modes durables : **Vélo + Marche + TC + Télétravail**.  
@@ -182,7 +181,7 @@ def render_sustainable_mobility_map(df: pd.DataFrame):
         )
     
     # Top sustainable communes
-    st.markdown("#### 🟢 Top 15 : Les Champions de la Mobilité Durable")
+    st.markdown("#### Top 15 : Les Champions de la Mobilité Durable")
     
     top_sustainable = scores_df.nlargest(15, 'score_mobilite_durable')[
         ['nom_commune', 'nom_departement', 'score_mobilite_durable', 'total_actifs']
@@ -258,7 +257,7 @@ def render_regional_comparison(df: pd.DataFrame):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 🏆 Régions Les Moins Dépendantes")
+        st.markdown("#### Régions Les Moins Dépendantes")
         
         best_regions = car_by_region.tail(5)[['nom_region', 'pourcentage']].reset_index(drop=True)
         best_regions.columns = ['Région', 'Voiture (%)']

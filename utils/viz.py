@@ -448,11 +448,10 @@ def create_gauge_chart(value: float, title: str, max_value: float = 100,
         }
     
     fig = go.Figure(go.Indicator(
-        mode='gauge+number+delta',
+        mode='gauge',
         value=value,
         domain={'x': [0, 1], 'y': [0, 1]},
         title={'text': title, 'font': {'size': 18}},
-        number={'suffix': '%', 'font': {'size': 36}},
         gauge={
             'axis': {'range': [None, max_value], 'ticksuffix': '%'},
             'bar': {'color': COLORS['primary']},
@@ -460,19 +459,25 @@ def create_gauge_chart(value: float, title: str, max_value: float = 100,
                 {'range': [0, 50], 'color': '#d5f4e6'},
                 {'range': [50, 75], 'color': '#fef5e7'},
                 {'range': [75, 100], 'color': '#fadbd8'}
-            ],
-            'threshold': {
-                'line': {'color': 'red', 'width': 4},
-                'thickness': 0.75,
-                'value': 90
-            }
+            ]
         }
     ))
     
     fig.update_layout(
         height=300,
         paper_bgcolor='white',
-        font={'family': 'Inter, sans-serif'}
+        font={'family': 'Inter, sans-serif'},
+        annotations=[
+            dict(
+                text=f"{value:.1f}%",
+                x=0.5,
+                y=0.15,
+                xref="paper",
+                yref="paper",
+                showarrow=False,
+                font=dict(size=24, color=COLORS['primary'], family='Inter, sans-serif')
+            )
+        ]
     )
     
     return fig
@@ -499,10 +504,11 @@ def create_donut_chart(df: pd.DataFrame, labels_col: str, values_col: str,
         values=df[values_col],
         hole=0.5,
         marker=dict(colors=colors, line=dict(color='white', width=2)),
-        textposition='outside',
-        textinfo='label+percent',
-        textfont=dict(size=13, family='Inter, sans-serif'),
-        hovertemplate='<b>%{label}</b><br>Actifs: %{value:,.0f}<br>Part: %{percent}<extra></extra>'
+        textposition='inside',
+        textinfo='percent',
+        textfont=dict(size=14, family='Inter, sans-serif', color='white'),
+        hovertemplate='<b>%{label}</b><br>Actifs: %{value:,.0f}<br>Part: %{percent}<extra></extra>',
+        insidetextorientation='radial'
     )])
     
     fig.update_layout(
@@ -521,7 +527,8 @@ def create_donut_chart(df: pd.DataFrame, labels_col: str, values_col: str,
             yanchor='middle',
             y=0.5,
             xanchor='left',
-            x=1.05
+            x=1.05,
+            font=dict(size=12)
         )
     )
     

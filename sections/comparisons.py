@@ -17,7 +17,7 @@ def render(df: pd.DataFrame):
         df: Filtered complete dataset
     """
     
-    st.markdown("## 🔬 Analyse Comparative : Disparités et Champions")
+    st.markdown("## Analyse Comparative : Disparités et Champions")
     
     st.markdown("""
     Au-delà des moyennes, explorons les **extrêmes** et les **corrélations** pour 
@@ -25,7 +25,7 @@ def render(df: pd.DataFrame):
     """)
     
     # Mode selector
-    st.markdown("### 🏆 Les Champions par Mode de Transport")
+    st.markdown("### Les Champions par Mode de Transport")
     
     mode_choice = st.selectbox(
         "Sélectionnez un mode de transport :",
@@ -38,14 +38,14 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Correlation analysis
-    st.markdown("### 📊 Taille de Commune vs Mobilité Durable")
+    st.markdown("### Taille de Commune vs Mobilité Durable")
     
     render_size_correlation(df)
     
     st.markdown("---")
     
     # Modal shift potential
-    st.markdown("### 🎯 Potentiel de Report Modal")
+    st.markdown("### Potentiel de Report Modal")
     
     render_modal_shift_analysis(df)
 

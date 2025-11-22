@@ -16,7 +16,7 @@ def render(df: pd.DataFrame):
         df: Filtered complete dataset
     """
     
-    st.markdown("## 📊 Vue d'Ensemble : Le Constat")
+    st.markdown("## Vue d'Ensemble : Le Constat")
     
     st.markdown("""
     Avant de plonger dans les détails régionaux, observons la **répartition globale** 
@@ -29,13 +29,13 @@ def render(df: pd.DataFrame):
     mode_percentages = (mode_stats / total_actifs * 100).round(2)
     
     # Top KPIs
-    st.markdown("### 🎯 Les Chiffres Clés")
+    st.markdown("### Les Chiffres Clés")
     
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.metric(
-            label="👥 Actifs Analysés",
+            label="Actifs Analysés",
             value=f"{total_actifs/1_000_000:.1f}M",
             delta=None,
             help="Nombre total d'actifs dans la sélection actuelle"
@@ -44,7 +44,7 @@ def render(df: pd.DataFrame):
     with col2:
         car_pct = mode_percentages.get('Voiture', 0)
         st.metric(
-            label="🚗 Part de la Voiture",
+            label="Part de la Voiture",
             value=f"{car_pct:.1f}%",
             delta=f"{car_pct - 70:.1f}% vs moyenne européenne",
             delta_color="inverse",
@@ -55,7 +55,7 @@ def render(df: pd.DataFrame):
         sustainable_modes = ['Vélo', 'Marche', 'Transports en commun']
         sustainable_pct = mode_percentages[mode_percentages.index.isin(sustainable_modes)].sum()
         st.metric(
-            label="🌱 Mobilité Durable",
+            label="Mobilité Durable",
             value=f"{sustainable_pct:.1f}%",
             delta="+2.3% depuis 2019",
             help="Vélo + Marche + Transports en commun"
@@ -64,7 +64,7 @@ def render(df: pd.DataFrame):
     with col4:
         no_transport_pct = mode_percentages.get('Pas de transport', 0)
         st.metric(
-            label="🏠 Pas de Transport",
+            label="Pas de Transport",
             value=f"{no_transport_pct:.1f}%",
             delta="+5.2% depuis 2019",
             help="Télétravail et trajets courts à pied"
@@ -76,7 +76,7 @@ def render(df: pd.DataFrame):
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### 🥧 Répartition Globale")
+        st.markdown("### Répartition Globale")
         
         # Prepare data for donut chart
         chart_data = pd.DataFrame({
@@ -100,7 +100,7 @@ def render(df: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("### 🎨 Vue Hiérarchique")
+        st.markdown("### Vue Hiérarchique")
         
         fig = create_sunburst_chart(df, title="")
         st.plotly_chart(fig, use_container_width=True)
@@ -116,7 +116,7 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Detailed breakdown
-    st.markdown("### 📈 Comparaison Détaillée des Modes")
+    st.markdown("### Comparaison Détaillée des Modes")
     
     # Create a nice table
     table_data = pd.DataFrame({
@@ -154,7 +154,7 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Gauges for car dependency
-    st.markdown("### 🎯 Indice de Dépendance Automobile")
+    st.markdown("### Indice de Dépendance Automobile")
     
     st.markdown("""
     Cet indicateur mesure à quel point nous dépendons de la voiture. 

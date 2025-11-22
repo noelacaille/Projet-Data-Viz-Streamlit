@@ -16,7 +16,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         df_filtered: Current filtered dataset
     """
     
-    st.markdown("## 🎓 Conclusions & Insights Clés")
+    st.markdown("## Conclusions & Insights Clés")
     
     st.markdown("""
     Après avoir exploré les données de mobilité de **25 millions d'actifs français**, 
@@ -24,12 +24,12 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     """)
     
     # Key Insights
-    st.markdown("### 💡 Les 5 Insights Majeurs")
+    st.markdown("### Les 5 Insights Majeurs")
     
     insights = [
         {
             "title": "1. La Voiture est Reine Absolue",
-            "icon": "🚗",
+            "icon": "",
             "content": """
             Avec **65-75% des trajets domicile-travail**, la voiture écrase tous les autres modes. 
             Ce n'est pas un choix, c'est souvent une **contrainte** pour des millions de Français 
@@ -39,7 +39,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         },
         {
             "title": "2. La Fracture Territoriale est Béante",
-            "icon": "🗺️",
+            "icon": "",
             "content": """
             Les grandes métropoles peuvent se permettre la mobilité durable. 
             Le reste du territoire est **prisonnier de la voiture**. C'est une question 
@@ -49,7 +49,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         },
         {
             "title": "3. Le Vélo : Succès Localisé, Pas Généralisé",
-            "icon": "🚴",
+            "icon": "",
             "content": """
             Malgré le battage médiatique, le vélo reste < 5% des trajets au niveau national. 
             Mais dans certaines villes (Strasbourg, Bordeaux), il atteint **15-20%**. 
@@ -59,7 +59,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         },
         {
             "title": "4. Le Télétravail : Une Solution Partielle",
-            "icon": "🏠",
+            "icon": "",
             "content": """
             Le "Pas de transport" a explosé post-Covid (5-10% selon les zones). 
             Mais c'est un **privilège de cadres urbains**. Les métiers manuels, 
@@ -69,7 +69,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         },
         {
             "title": "5. Effet de Seuil : La Densité est Clé",
-            "icon": "📊",
+            "icon": "",
             "content": """
             En dessous de **~1000 actifs**, il n'y a quasiment aucune alternative à la voiture. 
             La mobilité durable n'est **économiquement viable** qu'avec une densité minimale. 
@@ -80,32 +80,33 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     ]
     
     for insight in insights:
+        icon_text = f"{insight['icon']} " if insight['icon'] else ""
         if insight["type"] == "error":
             with st.container():
-                st.markdown(f"#### {insight['icon']} {insight['title']}")
+                st.markdown(f"#### {icon_text}{insight['title']}")
                 st.error(insight["content"])
         elif insight["type"] == "warning":
             with st.container():
-                st.markdown(f"#### {insight['icon']} {insight['title']}")
+                st.markdown(f"#### {icon_text}{insight['title']}")
                 st.warning(insight["content"])
         elif insight["type"] == "info":
             with st.container():
-                st.markdown(f"#### {insight['icon']} {insight['title']}")
+                st.markdown(f"#### {icon_text}{insight['title']}")
                 st.info(insight["content"])
         else:
             with st.container():
-                st.markdown(f"#### {insight['icon']} {insight['title']}")
+                st.markdown(f"#### {icon_text}{insight['title']}")
                 st.success(insight["content"])
     
     st.markdown("---")
     
     # Implications
-    st.markdown("### 🎯 Implications & Pistes d'Action")
+    st.markdown("### Implications & Pistes d'Action")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 🏛️ Pour les Décideurs Publics")
+        st.markdown("#### Pour les Décideurs Publics")
         st.markdown("""
         - **Arrêter le dogmatisme** : La solution vélo+TC ne fonctionne pas partout. 
           Il faut des solutions **différenciées** selon les territoires.
@@ -121,7 +122,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("#### 💼 Pour les Entreprises")
+        st.markdown("#### Pour les Entreprises")
         st.markdown("""
         - **Télétravail flexible** : Continuer à généraliser pour les postes compatibles.
         
@@ -136,13 +137,13 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Data Quality
-    st.markdown("### 📊 Qualité des Données & Limitations")
+    st.markdown("### Qualité des Données & Limitations")
     
     st.markdown("""
     Comme tout travail de data science, cette analyse a des **limites** qu'il faut connaître.
     """)
     
-    with st.expander("🔍 Voir l'évaluation détaillée de la qualité des données"):
+    with st.expander("Voir l'évaluation détaillée de la qualité des données"):
         # Validate data
         validation = validate_data_quality(df_raw)
         
@@ -206,7 +207,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Next Steps
-    st.markdown("### 🚀 Prochaines Étapes & Pistes d'Amélioration")
+    st.markdown("### Prochaines Étapes & Pistes d'Amélioration")
     
     st.markdown("""
     Ce dashboard est un **point de départ**. Voici comment aller plus loin :
@@ -215,7 +216,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 📈 Analyses Complémentaires")
+        st.markdown("#### Analyses Complémentaires")
         st.markdown("""
         - **Évolution temporelle** : Comparer 2015 → 2022 pour voir les tendances.
         - **Croisement avec revenus** : Mobilité = question de pouvoir d'achat.
@@ -224,7 +225,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("#### 🛠️ Améliorations Techniques")
+        st.markdown("#### Améliorations Techniques")
         st.markdown("""
         - **Données temps réel** : Intégrer des APIs de trafic pour dashboard dynamique.
         - **Clustering ML** : Identifier des "profils de communes" similaires.
@@ -235,7 +236,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Call to Action
-    st.markdown("### 📢 Contribuer & Partager")
+    st.markdown("### Contribuer & Partager")
     
     st.info("""
     🤝 **Ce projet est open source** ! 
