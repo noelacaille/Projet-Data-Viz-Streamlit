@@ -92,25 +92,90 @@ def render(df: pd.DataFrame):
         )
         st.plotly_chart(fig, use_container_width=True)
         
+        bike_pct = mode_percentages.get('Vélo', 0)
+        
         # Insight
         st.info(f"""
         💡 **Insight** : La voiture représente **{car_pct:.0f}% des trajets**, 
         soit près de **{mode_stats['Voiture']/1_000_000:.1f} millions d'actifs**. 
         C'est plus de **{int(car_pct/sustainable_pct)} fois** l'ensemble des modes durables réunis.
+        
+        Malgré le battage médiatique, le vélo ne représente 
+        que **{bike_pct:.1f}%** des trajets. C'est **{int(car_pct/bike_pct)} fois moins** 
+        que la voiture !
         """)
     
     with col2:
-        st.markdown("### Vue Hiérarchique")
+        st.markdown("### Impact Environnemental")
         
-        fig = create_sunburst_chart(df, title="")
+        # Calculate sustainable vs non-sustainable
+        sustainable_modes = ['Vélo', 'Marche', 'Transports en commun']
+        non_sustainable_modes = ['Voiture', 'Deux-roues motorisé']
+        no_transport = ['Pas de transport']
+        
+        sustainable_total = df[df['mode_transport'].isin(sustainable_modes)]['valeur'].sum()
+        non_sustainable_total = df[df['mode_transport'].isin(non_sustainable_modes)]['valeur'].sum()
+        no_transport_total = df[df['mode_transport'].isin(no_transport)]['valeur'].sum()
+        
+        # Create data for chart
+        sustainability_data = pd.DataFrame({
+            'Catégorie': ['Mobilité Durable', 'Mobilité Carbonée', 'Sans Transport'],
+            'valeur': [sustainable_total, non_sustainable_total, no_transport_total]
+        })
+        
+        # Create custom colors for sustainability
+        from utils.viz import COLORS
+        sustainability_colors = {
+            'Mobilité Durable': '#10b981',  # Green
+            'Mobilité Carbonée': '#ef4444',  # Red
+            'Sans Transport': '#94a3b8'  # Gray
+        }
+        
+        # Create simple bar chart
+        import plotly.graph_objects as go
+        fig = go.Figure(data=[
+            go.Bar(
+                x=sustainability_data['Catégorie'],
+                y=sustainability_data['valeur'],
+                marker_color=[sustainability_colors[cat] for cat in sustainability_data['Catégorie']],
+                text=[f"{val/1_000_000:.1f}M<br>({val/total_actifs*100:.1f}%)" for val in sustainability_data['valeur']],
+                textposition='outside',
+                textfont=dict(size=14, family='Inter, sans-serif', color='#1e3a8a')
+            )
+        ])
+        
+        fig.update_layout(
+            height=450,
+            paper_bgcolor='white',
+            plot_bgcolor='white',
+            showlegend=False,
+            xaxis=dict(
+                title='',
+                tickfont=dict(size=13, family='Inter, sans-serif')
+            ),
+            yaxis=dict(
+                title='Nombre d\'actifs',
+                tickfont=dict(size=12),
+                gridcolor='#e5e7eb'
+            ),
+            font=dict(family='Inter, sans-serif'),
+            margin=dict(t=20, b=60)
+        )
+        
         st.plotly_chart(fig, use_container_width=True)
         
-        # Insight
-        bike_pct = mode_percentages.get('Vélo', 0)
-        st.warning(f"""
-        ⚠️ **Le mythe du vélo** : Malgré le battage médiatique, le vélo ne représente 
-        que **{bike_pct:.1f}%** des trajets. C'est **{int(car_pct/bike_pct)} fois moins** 
-        que la voiture !
+        # Insight with CO2 explanation
+        co2_impact = non_sustainable_total / total_actifs * 100
+        
+        st.info(f"""
+        🌍 **Impact CO₂** : **{co2_impact:.0f}%** des trajets domicile-travail génèrent des émissions de CO₂ directes. 
+        
+        Les transports représentent **31% des émissions nationales** de CO₂, et la voiture individuelle 
+        en est le principal responsable avec environ **100-150g de CO₂/km** (vs 0g pour vélo/marche, 
+        et 10-30g pour les transports en commun par voyageur).
+        
+        **{sustainable_total/1_000_000:.1f}M actifs** utilisent déjà des modes durables, mais 
+        **{non_sustainable_total/1_000_000:.1f}M** dépendent encore de modes carbonés.
         """)
     
     st.markdown("---")

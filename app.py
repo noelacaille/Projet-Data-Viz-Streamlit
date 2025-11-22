@@ -242,6 +242,25 @@ def render_sidebar(df: pd.DataFrame):
             total_actifs = st.session_state['total_actifs']
             nb_communes = st.session_state['nb_communes']
             
+            # Center the metrics using custom CSS
+            st.markdown("""
+            <style>
+            [data-testid="stMetric"] {
+                text-align: center;
+            }
+            [data-testid="stMetricLabel"] {
+                justify-content: center;
+                text-align: center;
+                display: flex;
+                align-items: center;
+            }
+            [data-testid="stMetricLabel"] > div {
+                width: 100%;
+                text-align: center;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
             col1, col2 = st.columns(2)
             with col1:
                 st.metric("Actifs", f"{total_actifs/1_000_000:.1f}M")
@@ -379,9 +398,15 @@ def main():
         min_actifs=filters['min_actifs']
     )
     
-    # Update stats in session state
+    # Always update stats in session state (ensures correct values when filters are cleared)
     st.session_state['total_actifs'] = filtered_df['valeur'].sum()
     st.session_state['nb_communes'] = filtered_df['geocode_commune'].nunique()
+    
+    # Force sidebar rerun to update metrics display
+    if filters['regions'] is None and filters['departments'] is None and filters['size_categories'] is None:
+        # When all filters are cleared, recalculate from complete dataset
+        st.session_state['total_actifs'] = complete_df['valeur'].sum()
+        st.session_state['nb_communes'] = complete_df['geocode_commune'].nunique()
     
     # Main content tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
