@@ -239,12 +239,29 @@ def create_horizontal_bar_chart(df: pd.DataFrame, x_col: str, y_col: str,
         marker_line_width=0
     )
     
+    template = get_plotly_template()['layout']
     fig.update_layout(
-        **get_plotly_template()['layout'],
+        font=template['font'],
+        paper_bgcolor=template['paper_bgcolor'],
+        plot_bgcolor=template['plot_bgcolor'],
+        hovermode=template['hovermode'],
+        hoverlabel=template['hoverlabel'],
         title=dict(font=dict(size=18, color=COLORS['primary'])),
-        xaxis_title='Pourcentage (%)',
-        yaxis_title='',
-        yaxis=dict(autorange='reversed'),
+        xaxis=dict(
+            title='Pourcentage (%)',
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
+        yaxis=dict(
+            title='',
+            autorange='reversed',
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
         height=max(400, len(df) * 25),
         showlegend=False
     )
@@ -284,11 +301,28 @@ def create_scatter_plot(df: pd.DataFrame, x_col: str, y_col: str,
         color_discrete_map=TRANSPORT_COLORS if color_col == 'mode_transport' else None
     )
     
+    template = get_plotly_template()['layout']
     fig.update_layout(
-        **get_plotly_template()['layout'],
+        font=template['font'],
+        paper_bgcolor=template['paper_bgcolor'],
+        plot_bgcolor=template['plot_bgcolor'],
+        hovermode=template['hovermode'],
+        hoverlabel=template['hoverlabel'],
         title=dict(font=dict(size=18, color=COLORS['primary'])),
-        xaxis_title=x_label,
-        yaxis_title=y_label,
+        xaxis=dict(
+            title=x_label,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
+        yaxis=dict(
+            title=y_label,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
         height=500
     )
     
@@ -320,11 +354,28 @@ def create_stacked_bar_chart(df: pd.DataFrame, x_col: str, y_col: str,
         barmode='stack'
     )
     
+    template = get_plotly_template()['layout']
     fig.update_layout(
-        **get_plotly_template()['layout'],
+        font=template['font'],
+        paper_bgcolor=template['paper_bgcolor'],
+        plot_bgcolor=template['plot_bgcolor'],
+        hovermode=template['hovermode'],
+        hoverlabel=template['hoverlabel'],
         title=dict(font=dict(size=18, color=COLORS['primary'])),
-        yaxis_title='Pourcentage (%)',
-        xaxis_title='',
+        xaxis=dict(
+            title='',
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
+        yaxis=dict(
+            title='Pourcentage (%)',
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e0e0e0',
+            zeroline=False
+        ),
         height=500,
         legend=dict(
             orientation='h',

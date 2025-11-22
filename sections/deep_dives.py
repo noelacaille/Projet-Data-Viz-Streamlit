@@ -247,11 +247,10 @@ def render_regional_comparison(df: pd.DataFrame):
         title=""
     )
     
-    fig.update_layout(
-        xaxis_tickangle=-45,
-        height=600,
-        yaxis=dict(range=[0, 100])
-    )
+    # Update specific properties without conflicting with template
+    fig.update_xaxes(tickangle=-45)
+    fig.update_yaxes(range=[0, 100])
+    fig.update_layout(height=600)
     
     st.plotly_chart(fig, use_container_width=True)
     

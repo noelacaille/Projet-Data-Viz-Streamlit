@@ -244,10 +244,9 @@ def render_modal_shift_analysis(df: pd.DataFrame):
         title=""
     )
     
-    fig.update_layout(
-        xaxis_title='Actifs transférables (estimation -20%)',
-        height=600
-    )
+    # Update specific properties without conflicting with template
+    fig.update_xaxes(title='Actifs transférables (estimation -20%)')
+    fig.update_layout(height=600)
     
     fig.update_traces(marker_color=COLORS['warning'])
     
