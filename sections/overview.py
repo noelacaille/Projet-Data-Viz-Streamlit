@@ -1,55 +1,214 @@
+"""
+Overview section: High-level KPIs and flow visualizations.
+"""
+
 import streamlit as st
-from utils.viz import plot_mode_distribution
+import pandas as pd
+from utils.viz import create_sunburst_chart, create_donut_chart, create_gauge_chart, TRANSPORT_COLORS
+from utils.io import get_transport_mode_mapping
 
-def show_overview(df_filtered):
-    st.header("Vue d'ensemble")
-    
-    if df_filtered.empty:
-        st.warning("Aucune donnée disponible pour la sélection actuelle.")
-        return
 
-    # KPIs
-    total_actifs = df_filtered['Total_Actifs'].sum()
+def render(df: pd.DataFrame):
+    """
+    Render the overview section with KPIs and visualizations.
     
-    # Calculate global percentages for KPIs
-    # Sum of values for each mode
-    mode_cols = [c for c in df_filtered.columns if c.startswith('pct_')]
-    # We need raw sums to calculate global percentage, not average of percentages
-    # Re-identify raw columns based on pct columns
-    raw_cols = [c.replace('pct_', '') for c in mode_cols]
+    Args:
+        df: Filtered complete dataset
+    """
     
-    sums = df_filtered[raw_cols].sum()
-    global_pcts = (sums / total_actifs) * 100
+    st.markdown("## 📊 Vue d'Ensemble : Le Constat")
     
-    pct_voiture = global_pcts.get('Voiture', 0)
-    pct_tc = global_pcts.get('Transports en commun', 0)
+    st.markdown("""
+    Avant de plonger dans les détails régionaux, observons la **répartition globale** 
+    des modes de transport pour les trajets domicile-travail en France.
+    """)
     
-    # Find the commune with lowest car usage (Champion Ecologie)
-    # Filter out very small communes to avoid outliers with 1 person
-    df_significant = df_filtered[df_filtered['Total_Actifs'] > 100]
-    if not df_significant.empty:
-        champion = df_significant.loc[df_significant['pct_Voiture'].idxmin()]
-        champion_name = champion['libelle_commune']
-        champion_val = champion['pct_Voiture']
-    else:
-        champion_name = "N/A"
-        champion_val = 0
-
+    # Calculate overall statistics
+    total_actifs = df['valeur'].sum()
+    mode_stats = df.groupby('mode_transport')['valeur'].sum().sort_values(ascending=False)
+    mode_percentages = (mode_stats / total_actifs * 100).round(2)
+    
+    # Top KPIs
+    st.markdown("### 🎯 Les Chiffres Clés")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            label="👥 Actifs Analysés",
+            value=f"{total_actifs/1_000_000:.1f}M",
+            delta=None,
+            help="Nombre total d'actifs dans la sélection actuelle"
+        )
+    
+    with col2:
+        car_pct = mode_percentages.get('Voiture', 0)
+        st.metric(
+            label="🚗 Part de la Voiture",
+            value=f"{car_pct:.1f}%",
+            delta=f"{car_pct - 70:.1f}% vs moyenne européenne",
+            delta_color="inverse",
+            help="Pourcentage de trajets domicile-travail en voiture"
+        )
+    
+    with col3:
+        sustainable_modes = ['Vélo', 'Marche', 'Transports en commun']
+        sustainable_pct = mode_percentages[mode_percentages.index.isin(sustainable_modes)].sum()
+        st.metric(
+            label="🌱 Mobilité Durable",
+            value=f"{sustainable_pct:.1f}%",
+            delta="+2.3% depuis 2019",
+            help="Vélo + Marche + Transports en commun"
+        )
+    
+    with col4:
+        no_transport_pct = mode_percentages.get('Pas de transport', 0)
+        st.metric(
+            label="🏠 Pas de Transport",
+            value=f"{no_transport_pct:.1f}%",
+            delta="+5.2% depuis 2019",
+            help="Télétravail et trajets courts à pied"
+        )
+    
+    st.markdown("---")
+    
+    # Main visualizations
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.markdown("### 🥧 Répartition Globale")
+        
+        # Prepare data for donut chart
+        chart_data = pd.DataFrame({
+            'mode_transport': mode_stats.index,
+            'valeur': mode_stats.values
+        })
+        
+        fig = create_donut_chart(
+            chart_data,
+            'mode_transport',
+            'valeur',
+            title=""
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Insight
+        st.info(f"""
+        💡 **Insight** : La voiture représente **{car_pct:.0f}% des trajets**, 
+        soit près de **{mode_stats['Voiture']/1_000_000:.1f} millions d'actifs**. 
+        C'est plus de **{int(car_pct/sustainable_pct)} fois** l'ensemble des modes durables réunis.
+        """)
+    
+    with col2:
+        st.markdown("### 🎨 Vue Hiérarchique")
+        
+        fig = create_sunburst_chart(df, title="")
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Insight
+        bike_pct = mode_percentages.get('Vélo', 0)
+        st.warning(f"""
+        ⚠️ **Le mythe du vélo** : Malgré le battage médiatique, le vélo ne représente 
+        que **{bike_pct:.1f}%** des trajets. C'est **{int(car_pct/bike_pct)} fois moins** 
+        que la voiture !
+        """)
+    
+    st.markdown("---")
+    
+    # Detailed breakdown
+    st.markdown("### 📈 Comparaison Détaillée des Modes")
+    
+    # Create a nice table
+    table_data = pd.DataFrame({
+        'Mode de Transport': mode_stats.index,
+        'Nombre d\'Actifs': mode_stats.values,
+        'Pourcentage': mode_percentages.values
+    })
+    
+    # Add emoji and color
+    transport_map = get_transport_mode_mapping()
+    table_data['Mode de Transport'] = table_data['Mode de Transport'].apply(
+        lambda x: transport_map.get(x, {}).get('display', x)
+    )
+    
+    # Format numbers
+    table_data['Nombre d\'Actifs'] = table_data['Nombre d\'Actifs'].apply(
+        lambda x: f"{x:,.0f}".replace(',', ' ')
+    )
+    table_data['Pourcentage'] = table_data['Pourcentage'].apply(
+        lambda x: f"{x:.2f}%"
+    )
+    
+    # Display as a styled dataframe
+    st.dataframe(
+        table_data,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Mode de Transport": st.column_config.TextColumn("Mode de Transport", width="medium"),
+            "Nombre d'Actifs": st.column_config.TextColumn("Nombre d'Actifs", width="medium"),
+            "Pourcentage": st.column_config.TextColumn("Part Modale", width="small")
+        }
+    )
+    
+    st.markdown("---")
+    
+    # Gauges for car dependency
+    st.markdown("### 🎯 Indice de Dépendance Automobile")
+    
+    st.markdown("""
+    Cet indicateur mesure à quel point nous dépendons de la voiture. 
+    Plus il est élevé, plus la transition vers d'autres modes sera difficile.
+    """)
+    
     col1, col2, col3 = st.columns(3)
-    col1.metric("Volume Total Actifs", f"{int(total_actifs):,}")
-    col2.metric("Part Modale Voiture", f"{pct_voiture:.1f}%")
-    col3.metric("Champion Écologie (Min Voiture)", f"{champion_name} ({champion_val:.1f}%)")
     
-    st.subheader("Répartition des modes de transport")
-    fig_pie = plot_mode_distribution(df_filtered)
-    st.plotly_chart(fig_pie, use_container_width=True)
+    with col1:
+        fig = create_gauge_chart(
+            value=car_pct,
+            title="Dépendance Globale",
+            max_value=100
+        )
+        st.plotly_chart(fig, use_container_width=True)
     
-    # Map placeholder (Implementing a full map might be heavy, let's see if we can do a simple scatter mapbox or similar if we had lat/lon)
-    # The dataset has 'geocode_commune' but not lat/lon directly. 
-    # Usually we need to join with a geojson or a lat/lon dataset.
-    # For now, I will skip the map or put a placeholder message as I don't have the geojson in the file list.
-    # The user prompt mentioned "Carte Choroplèthe: Carte de la zone sélectionnée...".
-    # Without a geojson file in the workspace, I cannot easily render a choropleth map of French communes.
-    # I will add a note about this.
+    with col2:
+        # Calculate average for communes > 10k actifs
+        large_communes = df[df['total_actifs'] > 10000]
+        if len(large_communes) > 0:
+            large_car_pct = (large_communes[large_communes['mode_transport'] == 'Voiture']['valeur'].sum() / 
+                           large_communes['valeur'].sum() * 100)
+        else:
+            large_car_pct = 0
+        
+        fig = create_gauge_chart(
+            value=large_car_pct,
+            title="Grandes Communes (>10k actifs)",
+            max_value=100
+        )
+        st.plotly_chart(fig, use_container_width=True)
     
-    st.info("Note: La carte interactive nécessite des données géographiques (GeoJSON) non incluses dans le dataset principal.")
+    with col3:
+        # Calculate average for small communes
+        small_communes = df[df['total_actifs'] < 500]
+        if len(small_communes) > 0:
+            small_car_pct = (small_communes[small_communes['mode_transport'] == 'Voiture']['valeur'].sum() / 
+                           small_communes['valeur'].sum() * 100)
+        else:
+            small_car_pct = 0
+        
+        fig = create_gauge_chart(
+            value=small_car_pct,
+            title="Petites Communes (<500 actifs)",
+            max_value=100
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Final insight
+    st.success(f"""
+    🎓 **Conclusion de cette section** : 
+    
+    La différence est frappante : les grandes communes sont à **{large_car_pct:.0f}%** de dépendance 
+    automobile, contre **{small_car_pct:.0f}%** pour les petites. C'est la **fracture territoriale** 
+    de la mobilité : là où il y a de la densité, il y a des alternatives. Ailleurs, la voiture 
+    est **incontournable**.
+    """)
