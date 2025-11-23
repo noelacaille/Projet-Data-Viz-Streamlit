@@ -65,7 +65,7 @@ def render():
     
     with col1:
         st.markdown("""
-        #### Crise Climatique
+        #### Crise climatique
         Le secteur des **transports** représente 
         **31% des émissions de CO₂** en France.
         La voiture individuelle en est le 
@@ -74,7 +74,7 @@ def render():
     
     with col2:
         st.markdown("""
-        #### Centres vs Périphérie
+        #### Centres vs périphérie
         Les grandes métropoles investissent 
         massivement dans les **transports en commun**,
         mais qu'en est-il des **zones rurales** 
@@ -83,7 +83,7 @@ def render():
     
     with col3:
         st.markdown("""
-        #### Post-Covid
+        #### Post-COVID
         Le **télétravail** a explosé depuis 2020.
         Est-ce une vraie solution ou un 
         privilège de **cadres urbains** ?
@@ -92,14 +92,14 @@ def render():
     st.markdown("---")
     
     # The Questions
-    st.markdown("### Les Questions Clés")
+    st.markdown("### Les questions clés")
     
     questions = [
-        "**La Voiture est-elle vraiment reine ?** À quel point la France dépend-elle de la voiture pour les trajets domicile-travail ?",
-        "**La Révolution Vélo : mythe ou réalité ?** En dehors des centres-villes, le vélo est-il une alternative crédible ?",
-        "**Le Télétravail : qui en profite ?** Quelles communes ont le plus fort taux de 'Pas de transport' ?",
-        "**Les Zones Blanches : où sont-elles ?** Où n'existe-t-il aucune alternative à la voiture ?",
-        "**Le Potentiel de Changement : qui peut basculer ?** Quelles villes ont la taille critique pour développer des alternatives ?"
+        "**La voiture est-elle vraiment reine ?** À quel point la France dépend-elle de la voiture pour les trajets domicile-travail ?",
+        "**La révolution vélo : mythe ou réalité ?** En dehors des centres-villes, le vélo est-il une alternative crédible ?",
+        "**Le télétravail : qui en profite ?** Quelles communes ont le plus fort taux de 'Pas de transport' ?",
+        "**Les zones blanches : où sont-elles ?** Où n'existe-t-il aucune alternative à la voiture ?",
+        "**Le potentiel de changement : qui peut basculer ?** Quelles villes ont la taille critique pour développer des alternatives ?"
     ]
     
     for i, q in enumerate(questions, 1):
@@ -108,11 +108,11 @@ def render():
     st.markdown("---")
     
     # Data Overview
-    st.markdown("### À Propos des Données")
+    st.markdown("### À propos des données")
     
     st.markdown(get_data_license())
     
-    st.markdown("#### ⚠️ Limitations et Précautions")
+    st.markdown("#### ⚠️ Limitations et précautions")
     st.warning("""
     **Interprétation de "Pas de transport"** : Cette catégorie peut inclure :
     - Le télétravail (travail à domicile)

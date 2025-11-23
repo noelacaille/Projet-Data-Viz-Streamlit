@@ -8,7 +8,7 @@ import numpy as np
 import streamlit as st
 
 
-@st.cache_data(show_spinner="⚙️ Préparation des données...")
+@st.cache_data(show_spinner="Préparation des données...")
 def prepare_complete_dataset(commute_df: pd.DataFrame, geo_df: pd.DataFrame) -> pd.DataFrame:
     """
     Merge commute data with geographic reference and compute key metrics.

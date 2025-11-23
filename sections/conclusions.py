@@ -16,7 +16,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         df_filtered: Current filtered dataset
     """
     
-    st.markdown("## Conclusions & Insights Clés")
+    st.markdown("## Conclusions et insights")
     
     st.markdown("""
     Après avoir exploré les données de mobilité de **25 millions d'actifs français**, 
@@ -24,11 +24,11 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     """)
     
     # Key Insights
-    st.markdown("### Les 5 Insights Majeurs")
+    st.markdown("### Les 5 insights majeurs")
     
     insights = [
         {
-            "title": "1. La Voiture est Reine Absolue",
+            "title": "1. La voiture est reine absolue",
             "icon": "",
             "content": """
             Avec **65-75% des trajets domicile-travail**, la voiture écrase tous les autres modes. 
@@ -38,7 +38,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
             "type": "error"
         },
         {
-            "title": "2. La Fracture Territoriale est Béante",
+            "title": "2. La fracture territoriale est béante",
             "icon": "",
             "content": """
             Les grandes métropoles peuvent se permettre la mobilité durable. 
@@ -48,7 +48,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
             "type": "warning"
         },
         {
-            "title": "3. Le Vélo : Succès Localisé, Pas Généralisé",
+            "title": "3. Le vélo : succès localisé, pas généralisé",
             "icon": "",
             "content": """
             Malgré le battage médiatique, le vélo reste < 5% des trajets au niveau national. 
@@ -58,7 +58,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
             "type": "info"
         },
         {
-            "title": "4. Le Télétravail : Une Solution Partielle",
+            "title": "4. Le télétravail : une solution partielle",
             "icon": "",
             "content": """
             Le "Pas de transport" a explosé post-Covid (5-10% selon les zones). 
@@ -68,7 +68,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
             "type": "info"
         },
         {
-            "title": "5. Effet de Seuil : La Densité est Clé",
+            "title": "5. Effet de seuil : la densité est la clé",
             "icon": "",
             "content": """
             En dessous de **~1000 actifs**, il n'y a quasiment aucune alternative à la voiture. 
@@ -101,12 +101,12 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Implications
-    st.markdown("### Implications & Pistes d'Action")
+    st.markdown("### Implications et pistes d'action")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### Pour les Décideurs Publics")
+        st.markdown("#### Pour les décideurs publics")
         st.markdown("""
         - **Arrêter le dogmatisme** : La solution vélo+TC ne fonctionne pas partout. 
           Il faut des solutions **différenciées** selon les territoires.
@@ -122,7 +122,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("#### Pour les Entreprises")
+        st.markdown("#### Pour les entreprises")
         st.markdown("""
         - **Télétravail flexible** : Continuer à généraliser pour les postes compatibles.
         
@@ -137,10 +137,10 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Data Quality
-    st.markdown("### Qualité des Données & Limitations")
+    st.markdown("### Qualité des données et limitations")
     
     st.markdown("""
-    Comme tout travail de data science, cette analyse a des **limites** qu'il faut connaître.
+    Comme tout travail de Data Science, cette analyse a des **limites** qu'il faut connaître.
     """)
     
     with st.expander("Voir l'évaluation détaillée de la qualité des données"):
@@ -162,7 +162,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
             date_max = validation['date_range']['max']
             st.metric("Période", f"{date_min.year}" if date_min else "N/A")
         
-        st.markdown("#### Valeurs Manquantes par Colonne")
+        st.markdown("#### Valeurs manquantes par colonne")
         
         missing_df = pd.DataFrame.from_dict(
             validation['missing_values'], 
@@ -176,7 +176,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         else:
             st.success("✅ Aucune valeur manquante détectée !")
     
-    st.markdown("#### ⚠️ Biais et Limites Connus")
+    st.markdown("#### ⚠️ Les biais et limites connus")
     
     limitations = [
         {
@@ -207,7 +207,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Next Steps
-    st.markdown("### Prochaines Étapes & Pistes d'Amélioration")
+    st.markdown("### Prochaines étapes & pistes d'amélioration")
     
     st.markdown("""
     Ce dashboard est un **point de départ**. Voici comment aller plus loin :
@@ -216,7 +216,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### Analyses Complémentaires")
+        st.markdown("#### Analyses complémentaires")
         st.markdown("""
         - **Évolution temporelle** : Comparer 2015 → 2022 pour voir les tendances.
         - **Croisement avec revenus** : Mobilité = question de pouvoir d'achat.
@@ -225,7 +225,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("#### Améliorations Techniques")
+        st.markdown("#### Améliorations techniques")
         st.markdown("""
         - **Données temps réel** : Intégrer des APIs de trafic pour dashboard dynamique.
         - **Clustering ML** : Identifier des "profils de communes" similaires.
@@ -236,24 +236,20 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("---")
     
     # Call to Action
-    st.markdown("### Contribuer & Partager")
+    st.markdown("### Contribuer et partager")
     
     st.info("""
-    🤝 **Ce projet est open source** ! 
+    🤝 **Ce projet a été réalisé en Novembre 2025**
     
-    - 📊 **Données** : Insee, sous Licence Ouverte (réutilisation libre avec attribution)
-    - 💻 **Code** : Disponible pour étude, amélioration, réutilisation
-    - 🌐 **Partage** : N'hésitez pas à partager ce dashboard pour alimenter le débat public
-    
-    La transition écologique ne se fera pas sans **transparence des données** et 
-    **débat démocratique éclairé**.
+    - **Auteur** : Noé LACAILLE pour l'EFREI Paris
+    - **Données** : Insee 2022 repris par Ecolab (Licence Ouverte)
     """)
     
     # Footer
     st.markdown("---")
     st.markdown("""
     <div style='text-align: center; color: #7f8c8d; padding: 2rem 0;'>
-        <p style='margin: 0;'>Dashboard créé avec ❤️ et Streamlit</p>
+        <p style='margin: 0;'>Dashboard créé avec Streamlit</p>
         <p style='margin: 0; font-size: 0.9rem;'>Données : Insee 2022 • Licence Ouverte</p>
     </div>
     """, unsafe_allow_html=True)

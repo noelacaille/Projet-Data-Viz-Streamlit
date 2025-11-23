@@ -17,15 +17,15 @@ def render(df: pd.DataFrame):
         df: Filtered complete dataset
     """
     
-    st.markdown("## Analyse Comparative : Disparités et Champions")
+    st.markdown("## Analyse comparative : disparités et champions")
     
     st.markdown("""
     Au-delà des moyennes, explorons les **extrêmes** et les **corrélations** pour 
-    identifier ce qui fonctionne... et ce qui ne fonctionne pas.
+    identifier ce qui fonctionne et ce qui ne fonctionne pas.
     """)
     
     # Mode selector
-    st.markdown("### Les Champions par Mode de Transport")
+    st.markdown("### Les champions par mode de transport")
     
     mode_choice = st.selectbox(
         "Sélectionnez un mode de transport :",
@@ -38,14 +38,14 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Correlation analysis
-    st.markdown("### Taille de Commune vs Mobilité Durable")
+    st.markdown("### Taille de commune vs Mobilité durable")
     
     render_size_correlation(df)
     
     st.markdown("---")
     
     # Modal shift potential
-    st.markdown("### Potentiel de Report Modal")
+    st.markdown("### Potentiel de report modal")
     
     render_modal_shift_analysis(df)
 
@@ -55,7 +55,7 @@ def render_top_communes(df: pd.DataFrame, mode: str):
     
     st.markdown(f"#### Top 20 des communes pour : **{mode}**")
     
-    st.caption("Communes avec au moins 50 actifs (pour éviter les effets statistiques)")
+    st.caption("Communes avec au moins 50 actifs")
     
     # Get top communes
     with st.spinner("Calcul des classements..."):
@@ -258,7 +258,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
     with col1:
         total_potential = potential_df['actifs_transferables'].sum()
         st.metric(
-            "Potentiel Total",
+            "Potentiel total",
             f"{total_potential/1000:.0f}k actifs",
             help="Si 20% des automobilistes passaient à d'autres modes"
         )
@@ -266,7 +266,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
     with col2:
         avg_dep = potential_df['pourcentage'].mean()
         st.metric(
-            "Dépendance Moyenne",
+            "Dépendance moyenne",
             f"{avg_dep:.1f}%",
             help="Moyenne pour ces communes"
         )
@@ -274,9 +274,9 @@ def render_modal_shift_analysis(df: pd.DataFrame):
     with col3:
         co2_savings = total_potential * 2.5 * 220 / 1000  # 2.5 kg CO2/trajet, 220 jours
         st.metric(
-            "Économie CO₂ Potentielle",
+            "Économie CO₂ potentielle",
             f"{co2_savings/1000:.0f}k tonnes/an",
-            help="Estimation basée sur 2.5kg CO2 par trajet"
+            help="Estimation basée sur 2.5kg CO2 / trajet"
         )
     
     # Detailed table
@@ -298,7 +298,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
         )
     
     st.warning("""
-    ⚠️ **Note Méthodologique** : Le "potentiel de transfert" est une **estimation théorique** 
+    ⚠️ **Note méthodo** : Le "potentiel de transfert" est une **estimation théorique** 
     basée sur l'hypothèse qu'avec des infrastructures adaptées, 20% des automobilistes 
     pourraient changer de mode. C'est un indicateur de **priorisation** pour les investissements, 
     pas une prédiction précise.

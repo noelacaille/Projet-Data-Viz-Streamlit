@@ -146,7 +146,7 @@ def create_sunburst_chart(df: pd.DataFrame, title: str = "Répartition des modes
             colors=[TRANSPORT_COLORS.get(m, '#95a5a6') for m in agg_df['mode_transport']],
             line=dict(color='white', width=2)
         ),
-        hovertemplate='<b>%{label}</b><br>Actifs: %{value:,.0f}<br>Part: %{percentParent}<extra></extra>',
+        hovertemplate='<b>%{label}</b><br>Actifs : %{value:,.0f}<br>Part : %{percentParent}<extra></extra>',
         textfont=dict(size=14, family='Inter, sans-serif', color='white')
     ))
     
@@ -507,7 +507,7 @@ def create_donut_chart(df: pd.DataFrame, labels_col: str, values_col: str,
         textposition='inside',
         textinfo='percent',
         textfont=dict(size=14, family='Inter, sans-serif', color='white'),
-        hovertemplate='<b>%{label}</b><br>Actifs: %{value:,.0f}<br>Part: %{percent}<extra></extra>',
+        hovertemplate='<b>%{label}</b><br>Actifs : %{value:,.0f}<br>Part : %{percent}<extra></extra>',
         insidetextorientation='radial'
     )])
     

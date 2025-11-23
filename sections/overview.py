@@ -16,7 +16,7 @@ def render(df: pd.DataFrame):
         df: Filtered complete dataset
     """
     
-    st.markdown("## Vue d'Ensemble : Le Constat")
+    st.markdown("## Vue d'ensemble : le constat")
     
     st.markdown("""
     Avant de plonger dans les détails régionaux, observons la **répartition globale** 
@@ -29,13 +29,13 @@ def render(df: pd.DataFrame):
     mode_percentages = (mode_stats / total_actifs * 100).round(2)
     
     # Top KPIs
-    st.markdown("### Les Chiffres Clés")
+    st.markdown("### Les chiffres clés")
     
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.metric(
-            label="Actifs Analysés",
+            label="Actifs analysés",
             value=f"{total_actifs/1_000_000:.1f}M",
             delta=None,
             help="Nombre total d'actifs dans la sélection actuelle"
@@ -44,7 +44,7 @@ def render(df: pd.DataFrame):
     with col2:
         car_pct = mode_percentages.get('Voiture', 0)
         st.metric(
-            label="Part de la Voiture",
+            label="Part de la voiture",
             value=f"{car_pct:.1f}%",
             delta=f"{car_pct - 70:.1f}% vs moyenne européenne",
             delta_color="inverse",
@@ -55,7 +55,7 @@ def render(df: pd.DataFrame):
         sustainable_modes = ['Vélo', 'Marche', 'Transports en commun']
         sustainable_pct = mode_percentages[mode_percentages.index.isin(sustainable_modes)].sum()
         st.metric(
-            label="Mobilité Durable",
+            label="Mobilité durable",
             value=f"{sustainable_pct:.1f}%",
             delta="+2.3% depuis 2019",
             help="Vélo + Marche + Transports en commun"
@@ -64,7 +64,7 @@ def render(df: pd.DataFrame):
     with col4:
         no_transport_pct = mode_percentages.get('Pas de transport', 0)
         st.metric(
-            label="Pas de Transport",
+            label="Pas de transport",
             value=f"{no_transport_pct:.1f}%",
             delta="+5.2% depuis 2019",
             help="Télétravail et trajets courts à pied"
@@ -76,7 +76,7 @@ def render(df: pd.DataFrame):
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### Répartition Globale")
+        st.markdown("### Répartition globale")
         
         # Prepare data for donut chart
         chart_data = pd.DataFrame({
@@ -96,7 +96,7 @@ def render(df: pd.DataFrame):
         
         # Insight
         st.info(f"""
-        💡 **Insight** : La voiture représente **{car_pct:.0f}% des trajets**, 
+        💡 **Insight** : la voiture représente **{car_pct:.0f}% des trajets**, 
         soit près de **{mode_stats['Voiture']/1_000_000:.1f} millions d'actifs**. 
         C'est plus de **{int(car_pct/sustainable_pct)} fois** l'ensemble des modes durables réunis.
         
@@ -106,7 +106,7 @@ def render(df: pd.DataFrame):
         """)
     
     with col2:
-        st.markdown("### Impact Environnemental")
+        st.markdown("### Impact environnemental")
         
         # Calculate sustainable vs non-sustainable
         sustainable_modes = ['Vélo', 'Marche', 'Transports en commun']
@@ -181,7 +181,7 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Detailed breakdown
-    st.markdown("### Comparaison Détaillée des Modes")
+    st.markdown("### Comparaison détaillée des modes")
     
     # Create a nice table
     table_data = pd.DataFrame({
@@ -219,7 +219,7 @@ def render(df: pd.DataFrame):
     st.markdown("---")
     
     # Gauges for car dependency
-    st.markdown("### Indice de Dépendance Automobile")
+    st.markdown("### Indice de dépendance automobile")
     
     st.markdown("""
     Cet indicateur mesure à quel point nous dépendons de la voiture. 
@@ -231,7 +231,7 @@ def render(df: pd.DataFrame):
     with col1:
         fig = create_gauge_chart(
             value=car_pct,
-            title="Dépendance Globale",
+            title="Dépendance globale",
             max_value=100
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -247,7 +247,7 @@ def render(df: pd.DataFrame):
         
         fig = create_gauge_chart(
             value=large_car_pct,
-            title="Grandes Communes (>10k actifs)",
+            title="Grandes communes (>10k actifs)",
             max_value=100
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -263,14 +263,14 @@ def render(df: pd.DataFrame):
         
         fig = create_gauge_chart(
             value=small_car_pct,
-            title="Petites Communes (<500 actifs)",
+            title="Petites communes (<500 actifs)",
             max_value=100
         )
         st.plotly_chart(fig, use_container_width=True)
     
     # Final insight
     st.success(f"""
-    🎓 **Conclusion de cette section** : 
+    **Conclusion de cette section** : 
     
     La différence est frappante : les grandes communes sont à **{large_car_pct:.0f}%** de dépendance 
     automobile, contre **{small_car_pct:.0f}%** pour les petites. C'est la **fracture territoriale** 

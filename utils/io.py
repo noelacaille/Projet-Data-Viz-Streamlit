@@ -8,7 +8,7 @@ import streamlit as st
 from pathlib import Path
 
 
-@st.cache_data(show_spinner="🔄 Chargement des données de mobilité...")
+@st.cache_data(show_spinner="Chargement des données de mobilité...")
 def load_commute_data() -> pd.DataFrame:
     """
     Load the main commute flux dataset.
@@ -30,7 +30,7 @@ def load_commute_data() -> pd.DataFrame:
     return df
 
 
-@st.cache_data(show_spinner="🗺️ Chargement des données géographiques...")
+@st.cache_data(show_spinner="Chargement des données géographiques...")
 def load_geographic_data() -> pd.DataFrame:
     """
     Load geographic reference data (communes, departments, regions).
@@ -60,7 +60,7 @@ def get_data_license() -> str:
     - Flux domicile-travail : Insee, Recensement de la population 2022
     - Référentiel géographique : Insee & Data.gouv.fr
     
-    **Licence :** Licence Ouverte / Open Licence (Etalab)
+    **Licence :** Licence Ouverte
     
     Les données sont issues de l'enquête annuelle de recensement et représentent 
     les déplacements domicile-travail des actifs de 15 ans ou plus.
