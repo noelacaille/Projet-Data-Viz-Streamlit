@@ -158,8 +158,8 @@ def get_top_communes_by_mode(df: pd.DataFrame, mode: str, n: int = 20) -> pd.Dat
     """
     mode_df = df[df['mode_transport'] == mode].copy()
     
-    # Filter out very small communes (< 50 actifs) to avoid statistical noise
-    mode_df = mode_df[mode_df['total_actifs'] >= 50]
+    # Filter out very small communes (< 100 actifs) to avoid statistical noise
+    mode_df = mode_df[mode_df['total_actifs'] >= 100]
     
     # Sort by percentage and get top N
     top = mode_df.nlargest(n, 'pourcentage')[
@@ -193,10 +193,10 @@ def compute_modal_shift_potential(df: pd.DataFrame) -> pd.DataFrame:
         'longitude': 'first'
     }).reset_index()
     
-    # Filter for communes with > 1000 actifs and > 70% car usage
+    # Filter for communes with > 1000 actifs and > 80% car usage
     potential = car_dep[
         (car_dep['total_actifs'] > 1000) & 
-        (car_dep['pourcentage'] > 70)
+        (car_dep['pourcentage'] > 80)
     ].copy()
     
     # Calculate potential reduction (assuming 20% could shift to alternatives)

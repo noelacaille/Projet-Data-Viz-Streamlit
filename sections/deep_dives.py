@@ -119,7 +119,7 @@ def render_car_dependency_map(df: pd.DataFrame):
     )
     
     st.warning("""
-    ⚠️ **Observation** : Les communes les plus dépendantes sont souvent rurales ou périurbaines, 
+    **Observation** : Les communes les plus dépendantes sont souvent rurales ou périurbaines, 
     sans accès aux transports en commun. Pour ces territoires, la transition est un **défi majeur**.
     """)
 
@@ -205,7 +205,7 @@ def render_sustainable_mobility_map(df: pd.DataFrame):
     )
     
     st.success("""
-    ✅ **Observation** : Les communes avec les meilleurs scores sont souvent des **centres urbains** 
+    **Observation** : Les communes avec les meilleurs scores sont souvent des **centres urbains** 
     (Paris, Lyon, Strasbourg) ou des **petites villes denses** avec une culture vélo forte.
     """)
 
@@ -266,7 +266,7 @@ def render_regional_comparison(df: pd.DataFrame):
         st.dataframe(best_regions, use_container_width=True)
         
         st.info("""
-        💡 Ces régions ont souvent des **métropoles denses** avec des réseaux de 
+        Ces régions ont souvent des **métropoles denses** avec des réseaux de 
         transport développés (Île-de-France, Grand Est avec Strasbourg...).
         """)
     
@@ -280,6 +280,6 @@ def render_regional_comparison(df: pd.DataFrame):
         st.dataframe(worst_regions, use_container_width=True)
         
         st.warning("""
-        ⚠️ Ces régions, souvent rurales ou montagneuses, ont **peu d'alternatives**. 
+        Ces régions, souvent rurales ou montagneuses, ont **peu d'alternatives**. 
         La politique de mobilité ne peut pas être uniforme sur le territoire.
         """)

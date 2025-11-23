@@ -176,7 +176,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         else:
             st.success("✅ Aucune valeur manquante détectée !")
     
-    st.markdown("#### ⚠️ Les biais et limites connus")
+    st.markdown("#### Les biais et limites connus")
     
     limitations = [
         {
@@ -239,7 +239,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
     st.markdown("### Contribuer et partager")
     
     st.info("""
-    🤝 **Ce projet a été réalisé en Novembre 2025**
+    **Ce projet a été réalisé en Novembre 2025**
     
     - **Auteur** : Noé LACAILLE pour l'EFREI Paris
     - **Données** : Insee 2022 repris par Ecolab (Licence Ouverte)

@@ -96,7 +96,7 @@ def render(df: pd.DataFrame):
         
         # Insight
         st.info(f"""
-        💡 **Insight** : la voiture représente **{car_pct:.0f}% des trajets**, 
+        **Insight** : la voiture représente **{car_pct:.0f}% des trajets**, 
         soit près de **{mode_stats['Voiture']/1_000_000:.1f} millions d'actifs**. 
         C'est plus de **{int(car_pct/sustainable_pct)} fois** l'ensemble des modes durables réunis.
         
@@ -168,7 +168,7 @@ def render(df: pd.DataFrame):
         co2_impact = non_sustainable_total / total_actifs * 100
         
         st.info(f"""
-        🌍 **Impact CO₂** : **{co2_impact:.0f}%** des trajets domicile-travail génèrent des émissions de CO₂ directes. 
+        **Impact CO₂** : **{co2_impact:.0f}%** des trajets domicile-travail génèrent des émissions de CO₂ directes. 
         
         Les transports représentent **31% des émissions nationales** de CO₂, et la voiture individuelle 
         en est le principal responsable avec environ **100-150g de CO₂/km** (vs 0g pour vélo/marche, 

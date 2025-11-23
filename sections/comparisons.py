@@ -55,7 +55,7 @@ def render_top_communes(df: pd.DataFrame, mode: str):
     
     st.markdown(f"#### Top 20 des communes pour : **{mode}**")
     
-    st.caption("Communes avec au moins 50 actifs")
+    st.caption("Communes avec au moins 100 actifs")
     
     # Get top communes
     with st.spinner("Calcul des classements..."):
@@ -81,7 +81,7 @@ def render_top_communes(df: pd.DataFrame, mode: str):
     st.plotly_chart(fig, use_container_width=True)
     
     # Detailed table
-    with st.expander("📋 Voir le tableau détaillé"):
+    with st.expander("Voir le tableau détaillé"):
         display_df = top[['nom_commune', 'nom_departement', 'pourcentage', 'valeur', 'total_actifs']].copy()
         display_df.columns = ['Commune', 'Département', 'Part (%)', 'Utilisateurs', 'Total Actifs']
         display_df.index = range(1, len(display_df) + 1)
@@ -99,28 +99,28 @@ def render_top_communes(df: pd.DataFrame, mode: str):
     # Mode-specific insights
     if mode == 'Vélo':
         st.info("""
-        🚴 **Insight Vélo** : Les champions du vélo sont souvent des **villes moyennes** 
+        **Insight Vélo** : Les champions du vélo sont souvent des **villes moyennes** 
         (Strasbourg, Bordeaux, Grenoble) avec une **infrastructure cyclable** développée 
         et une **culture vélo** forte. La topographie compte aussi : les villes plates dominent.
         """)
     
     elif mode == 'Transports en commun':
         st.info("""
-        🚌 **Insight TC** : Sans surprise, les grandes métropoles dominent. Mais notez que 
+        **Insight TC** : Sans surprise, les grandes métropoles dominent. Mais notez que 
         même dans ces villes, les TC restent souvent **minoritaires** face à la voiture. 
         Seules Paris et quelques centres atteignent > 30%.
         """)
     
     elif mode == 'Pas de transport':
         st.info("""
-        🏠 **Insight Télétravail** : Cette catégorie mélange télétravail et résidence sur lieu 
+        **Insight Télétravail** : Cette catégorie mélange télétravail et résidence sur lieu 
         de travail. Les scores élevés peuvent indiquer soit des **zones résidentielles aisées** 
         (cadres en télétravail) soit des **zones agricoles** (agriculteurs).
         """)
     
     elif mode == 'Marche':
         st.info("""
-        🚶 **Insight Marche** : La marche domine dans les **centres-villes denses** où 
+        **Insight Marche** : La marche domine dans les **centres-villes denses** où 
         logement et emploi sont proches. C'est aussi un indicateur de **mixité fonctionnelle**.
         """)
 
@@ -214,9 +214,9 @@ def render_modal_shift_analysis(df: pd.DataFrame):
     (passer de la voiture à des alternatives) ?
     
     On identifie les communes qui cumulent :
-    - ✅ Taille suffisante (> 1000 actifs)
-    - ⚠️ Forte dépendance automobile (> 70%)
-    - 🎯 Potentiel d'action pour les politiques publiques
+    - Taille suffisante (> 1000 actifs)
+    - Forte dépendance automobile (> 80%)
+    - Potentiel d'action pour les politiques publiques
     """)
     
     # Calculate modal shift potential
@@ -228,7 +228,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
         return
     
     st.markdown(f"""
-    💡 **{len(potential_df)} communes** identifiées avec un fort potentiel de transformation.
+    **{len(potential_df)} communes** identifiées avec un fort potentiel de transformation.
     """)
     
     # Top 20 communes by transferable workers
@@ -280,7 +280,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
         )
     
     # Detailed table
-    with st.expander("📋 Voir le tableau détaillé"):
+    with st.expander("Voir le tableau détaillé"):
         display_df = potential_df[['nom_commune', 'nom_departement', 'pourcentage', 
                                     'total_actifs', 'actifs_transferables']].head(30).copy()
         display_df.columns = ['Commune', 'Département', 'Dépendance (%)', 
@@ -298,7 +298,7 @@ def render_modal_shift_analysis(df: pd.DataFrame):
         )
     
     st.warning("""
-    ⚠️ **Note méthodo** : Le "potentiel de transfert" est une **estimation théorique** 
+    **Note méthodo** : Le "potentiel de transfert" est une **estimation théorique** 
     basée sur l'hypothèse qu'avec des infrastructures adaptées, 20% des automobilistes 
     pourraient changer de mode. C'est un indicateur de **priorisation** pour les investissements, 
     pas une prédiction précise.

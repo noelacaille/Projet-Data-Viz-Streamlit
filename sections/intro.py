@@ -21,7 +21,7 @@ def render():
     <div style='background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%); 
                 padding: 3rem; border-radius: 15px; margin-bottom: 2rem;'>
         <h1 style='color: white; margin: 0; font-size: 2.5rem; font-weight: 700;'>
-            La fracture de la mobilité
+            La fracture de la mobilité en France
         </h1>
         <p style='color: rgba(255,255,255,0.95); font-size: 1.3rem; margin-top: 1rem; margin-bottom: 0;'>
             La France est-elle vraiment prête à lâcher la voiture ?
@@ -112,7 +112,7 @@ def render():
     
     st.markdown(get_data_license())
     
-    st.markdown("#### ⚠️ Limitations et précautions")
+    st.markdown("#### Limitations et précautions")
     st.warning("""
     **Interprétation de "Pas de transport"** : Cette catégorie peut inclure :
     - Le télétravail (travail à domicile)
