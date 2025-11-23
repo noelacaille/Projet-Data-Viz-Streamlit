@@ -3,18 +3,25 @@ Introduction section: Context, objectives, and data overview.
 """
 
 import streamlit as st
-from utils.io import get_data_license
+from utils.io import get_data_license, load_commute_data
 
 
 def render():
     """Render the introduction section."""
+    
+    # Load data to calculate real statistics
+    df = load_commute_data()
+    year = df['date_mesure'].dt.year.unique()[0]
+    total_actifs = df['valeur'].sum()
+    nb_communes = df['geocode_commune'].nunique()
+    nb_modes = df['mode_transport'].nunique()
     
     # Hero section
     st.markdown("""
     <div style='background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%); 
                 padding: 3rem; border-radius: 15px; margin-bottom: 2rem;'>
         <h1 style='color: white; margin: 0; font-size: 2.5rem; font-weight: 700;'>
-            La Fracture de la Mobilité
+            La fracture de la mobilité
         </h1>
         <p style='color: rgba(255,255,255,0.95); font-size: 1.3rem; margin-top: 1rem; margin-bottom: 0;'>
             La France est-elle vraiment prête à lâcher la voiture ?
@@ -40,14 +47,14 @@ def render():
         """)
     
     with col2:
-        st.info("""
-        **Les Données**
+        st.info(f"""
+        **Les données**
         
-        - **Année** : 2022
-        - **Actifs** : 25M+
-        - **Communes** : 36 000
-        - **Modes** : 6 catégories
-        """)
+        - **Année** : {year}
+        - **Actifs** : {total_actifs:,.0f}
+        - **Communes** : {nb_communes:,}
+        - **Modes** : {nb_modes} catégories
+        """.replace(',', ' '))
     
     st.markdown("---")
     

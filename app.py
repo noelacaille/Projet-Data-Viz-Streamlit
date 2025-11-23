@@ -1,7 +1,7 @@
 """
 Main Streamlit application for the Mobility Dashboard.
 
-🚗 La Fracture de la Mobilité : La France est-elle vraiment prête à lâcher la voiture ?
+La fracture de la mobilité : La France est-elle vraiment prête à lâcher la voiture ?
 
 This dashboard explores commuting patterns in France using 2022 census data,
 revealing the deep territorial divide in mobility options.
@@ -24,7 +24,7 @@ from sections import intro, overview, deep_dives, comparisons, conclusions
 # ============================================================================
 
 st.set_page_config(
-    page_title="La Fracture de la Mobilité | Dashboard",
+    page_title="La fracture de la mobilité | Dashboard",
     page_icon="🚗",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -96,20 +96,46 @@ def load_custom_css():
     /* Sidebar */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
-        padding-top: 2rem;
+        padding-top: 0.5rem;
     }
     
     [data-testid="stSidebar"] .element-container {
         color: white;
+        margin-bottom: 0.3rem;
     }
     
     [data-testid="stSidebar"] label {
         color: white !important;
         font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.2rem;
     }
     
     [data-testid="stSidebar"] .st-emotion-cache-16idsys p {
         color: white;
+    }
+    
+    .st-emotion-cache-ja5xo9{
+        padding-bottom: 0 !important;
+    }
+    
+    [data-testid="stSidebar"] h4 {
+        color: white !important;
+        font-size: 1rem;
+        margin-top: 0.8rem;
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+    }
+    
+    /* Compact multiselect in sidebar */
+    [data-testid="stSidebar"] [data-baseweb="select"] {
+        margin-bottom: 0.3rem;
+    }
+    
+    /* Compact slider in sidebar */
+    [data-testid="stSidebar"] .stSlider {
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
     }
     
     /* Info/Warning/Success boxes */
@@ -197,7 +223,7 @@ def load_custom_css():
 # DATA LOADING
 # ============================================================================
 
-@st.cache_data(show_spinner="📊 Chargement des données...")
+@st.cache_data(show_spinner="Chargement des données...")
 def load_all_data():
     """
     Load and prepare all data with caching.
@@ -231,46 +257,13 @@ def render_sidebar(df: pd.DataFrame):
     """
     with st.sidebar:
         st.markdown("""
-        <div style='text-align: center; padding: 1rem 0 1rem 0;'>
-            <h1 style='color: white; margin: 0; font-size: 1.8rem;'>Mobilité France</h1>
-            <p style='color: rgba(255,255,255,0.9); margin-top: 0.5rem;'>Filtres & Navigation</p>
+        <div style='text-align: center; padding: 0.3rem 0;'>
+            <h1 style='color: white; margin: 0; font-size: 1.3rem; font-weight: 600;'>Analyse de la mobilité en France</h1>
         </div>
         """, unsafe_allow_html=True)
         
-        # Show current selection stats at top from session state
-        if 'total_actifs' in st.session_state and 'nb_communes' in st.session_state:
-            total_actifs = st.session_state['total_actifs']
-            nb_communes = st.session_state['nb_communes']
-            
-            # Center the metrics using custom CSS
-            st.markdown("""
-            <style>
-            [data-testid="stMetric"] {
-                text-align: center;
-            }
-            [data-testid="stMetricLabel"] {
-                justify-content: center;
-                text-align: center;
-                display: flex;
-                align-items: center;
-            }
-            [data-testid="stMetricLabel"] > div {
-                width: 100%;
-                text-align: center;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            
-            col1, col2 = st.columns(2)
-            with col1:
-                st.metric("Actifs", f"{total_actifs/1_000_000:.1f}M")
-            with col2:
-                st.metric("Communes", f"{nb_communes:,}".replace(',', ' '))
-        
-        st.markdown("---")
-        
         # Region filter
-        st.markdown("### Filtres Géographiques")
+        st.markdown("#### Géographie")
         
         all_regions = sorted(df['nom_region'].dropna().unique())
         selected_regions = st.multiselect(
@@ -295,10 +288,8 @@ def render_sidebar(df: pd.DataFrame):
             help="Affinez par département"
         )
         
-        st.markdown("---")
-        
         # Size filters
-        st.markdown("### Taille des Communes")
+        st.markdown("#### Taille")
         
         size_categories = st.multiselect(
             "Catégories de taille",
@@ -311,48 +302,34 @@ def render_sidebar(df: pd.DataFrame):
         # Dynamic slider bounds based on size categories
         slider_min = 0
         slider_max = 10000
-        default_value = 1000
+        default_value = 0  # Changed from 1000 to 0 to include all communes by default
         
         if size_categories:
             if 'Très petite (<100)' in size_categories:
                 slider_min = 0
                 slider_max = 100
-                default_value = min(default_value, 50)
             elif 'Petite (100-500)' in size_categories:
                 slider_min = 100
                 slider_max = 500
-                default_value = min(default_value, 300)
             elif 'Moyenne (500-2k)' in size_categories:
                 slider_min = 500
                 slider_max = 2000
-                default_value = min(default_value, 1000)
             elif 'Grande (2k-10k)' in size_categories:
                 slider_min = 2000
                 slider_max = 10000
-                default_value = max(default_value, 2000)
             elif 'Très grande (>10k)' in size_categories:
                 slider_min = 10000
                 slider_max = 100000
-                default_value = max(default_value, 10000)
+            default_value = slider_min
         
         min_actifs = st.slider(
-            "Minimum d'actifs",
+            "Min. actifs",
             min_value=slider_min,
             max_value=slider_max,
             value=default_value,
             step=100,
             help="Exclure les très petites communes"
         )
-        
-        st.markdown("---")
-        
-        # Info section
-        st.markdown("### À Propos")
-        st.markdown("""
-        <p style='color: rgba(255,255,255,0.9); font-size: 0.9rem;'>
-        Ce dashboard analyse les trajets domicile-travail de 25M+ d'actifs français.
-        </p>
-        """, unsafe_allow_html=True)
         
         filters = {
             'regions': selected_regions if selected_regions else None,
@@ -381,15 +358,10 @@ def main():
         st.error(f"❌ Erreur lors du chargement des données : {e}")
         st.stop()
     
-    # Initialize stats in session state with full dataset if not present
-    if 'total_actifs' not in st.session_state:
-        st.session_state['total_actifs'] = complete_df['valeur'].sum()
-        st.session_state['nb_communes'] = complete_df['geocode_commune'].nunique()
-    
-    # Sidebar filters
+    # Render sidebar and get filter selections
     filters = render_sidebar(complete_df)
     
-    # Apply filters
+    # Apply filters to get filtered dataset
     filtered_df = filter_data(
         complete_df,
         regions=filters['regions'],
@@ -398,22 +370,47 @@ def main():
         min_actifs=filters['min_actifs']
     )
     
-    # Always update stats in session state (ensures correct values when filters are cleared)
-    st.session_state['total_actifs'] = filtered_df['valeur'].sum()
-    st.session_state['nb_communes'] = filtered_df['geocode_commune'].nunique()
-    
-    # Force sidebar rerun to update metrics display
-    if filters['regions'] is None and filters['departments'] is None and filters['size_categories'] is None:
-        # When all filters are cleared, recalculate from complete dataset
-        st.session_state['total_actifs'] = complete_df['valeur'].sum()
-        st.session_state['nb_communes'] = complete_df['geocode_commune'].nunique()
+    # Calculate and display stats in sidebar after filters
+    with st.sidebar:
+        # Compact metrics display
+        st.markdown("""
+        <style>
+        [data-testid="stMetric"] {
+            text-align: center;
+        }
+        [data-testid="stMetricLabel"] {
+            justify-content: center;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem !important;
+        }
+        [data-testid="stMetricLabel"] > div {
+            width: 100%;
+            text-align: center;
+        }
+        [data-testid="stMetricValue"] {
+            font-size: 1.7rem !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        total_actifs = filtered_df['valeur'].sum()
+        nb_communes = filtered_df['geocode_commune'].nunique()
+        
+        st.markdown("#### Sélection")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Actifs", f"{total_actifs/1_000_000:.1f}M")
+        with col2:
+            st.metric("Communes", f"{nb_communes:,}".replace(',', ' '))
     
     # Main content tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Introduction",
-        "Vue d'Ensemble",
+        "Vue d'ensemble",
         "Cartographie",
-        "Analyses Comparatives",
+        "Analyses comparatives",
         "Conclusions"
     ])
     
