@@ -174,7 +174,7 @@ def render(df_raw: pd.DataFrame, df_filtered: pd.DataFrame):
         if len(missing_df) > 0:
             st.dataframe(missing_df, use_container_width=True)
         else:
-            st.success("✅ Aucune valeur manquante détectée !")
+            st.success("Aucune valeur manquante détectée !")
     
     st.markdown("#### Les biais et limites connus")
     

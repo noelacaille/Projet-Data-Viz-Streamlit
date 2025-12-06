@@ -73,34 +73,34 @@ def get_transport_mode_mapping() -> dict:
     """
     return {
         'Voiture': {
-            'display': '🚗 Voiture',
+            'display': 'Voiture',
             'color': '#e74c3c',  # Red
-            'emoji': '🚗'
+            'emoji': ''
         },
         'Transports en commun': {
-            'display': '🚌 Transports en commun',
+            'display': 'Transports en commun',
             'color': '#3498db',  # Blue
-            'emoji': '🚌'
+            'emoji': ''
         },
         'Vélo': {
-            'display': '🚴 Vélo',
+            'display': 'Vélo',
             'color': '#2ecc71',  # Green
-            'emoji': '🚴'
+            'emoji': ''
         },
         'Marche': {
-            'display': '🚶 Marche',
+            'display': 'Marche',
             'color': '#f39c12',  # Orange
-            'emoji': '🚶'
+            'emoji': ''
         },
         'Deux-roues motorisé': {
-            'display': '🏍️ Deux-roues motorisé',
+            'display': 'Deux-roues motorisé',
             'color': '#9b59b6',  # Purple
-            'emoji': '🏍️'
+            'emoji': ''
         },
         'Pas de transport': {
-            'display': '🏠 Pas de transport',
+            'display': 'Pas de transport',
             'color': '#95a5a6',  # Gray
-            'emoji': '🏠'
+            'emoji': ''
         }
     }
 

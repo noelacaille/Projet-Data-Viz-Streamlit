@@ -199,7 +199,7 @@ def render_size_correlation(df: pd.DataFrame):
         st.metric("Communes > 30%", f"{high_score_pct:.1f}%")
     
     st.success(f"""
-    ✅ **Conclusion** : La corrélation est **{correlation:.2f}**, confirmant qu'il existe un 
+    **Conclusion** : La corrélation est **{correlation:.2f}**, confirmant qu'il existe un 
     **effet de seuil**. En dessous de ~{threshold:,.0f} actifs, les alternatives à la voiture 
     sont quasi inexistantes. C'est le **paradoxe de la mobilité durable** : elle nécessite 
     une densité minimale pour être viable économiquement.

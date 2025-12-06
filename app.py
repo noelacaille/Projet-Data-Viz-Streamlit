@@ -355,7 +355,7 @@ def main():
     try:
         commute_raw, geo_raw, complete_df = load_all_data()
     except Exception as e:
-        st.error(f"❌ Erreur lors du chargement des données : {e}")
+        st.error(f"Erreur lors du chargement des données : {e}")
         st.stop()
     
     # Render sidebar and get filter selections
@@ -419,19 +419,19 @@ def main():
     
     with tab2:
         if len(filtered_df) == 0:
-            st.warning("⚠️ Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
+            st.warning("Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
         else:
             overview.render(filtered_df)
     
     with tab3:
         if len(filtered_df) == 0:
-            st.warning("⚠️ Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
+            st.warning("Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
         else:
             deep_dives.render(filtered_df)
     
     with tab4:
         if len(filtered_df) == 0:
-            st.warning("⚠️ Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
+            st.warning("Aucune donnée ne correspond aux filtres sélectionnés. Ajustez vos filtres.")
         else:
             comparisons.render(filtered_df)
     
